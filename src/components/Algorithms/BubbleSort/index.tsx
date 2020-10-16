@@ -7,6 +7,7 @@ import RunButton from '../../Shared/RunButton';
 import NumberInput from '../../Shared/NumberInput';
 import RefreshDataButton from '../../Shared/RefreshDataButton';
 import SpeedSlider from '../../Shared/SpeedSlider';
+import RunningAnimation from '../../Shared/RunningAnimation';
 
 const Svg = styled.svg`
     height:${SVG_HEIGHT}px;
@@ -40,6 +41,8 @@ const SidePanel = styled.div`
     margin: 20px;
     padding: 20px 50px;
     background: rgba(0, 0, 0, 0.2);
+    align-items: center;
+    justify-content: center;
 `;
 
 const MainContent = styled.div`
@@ -57,6 +60,7 @@ const BubbleSort: React.FC = () => {
 
     const [dataLength, setDataLength] = useState(50);
     const [speedPercent, setSpeedPercent] = useState(100);
+    const [isRunning, setIsRunning] = useState(false);
 
     function getRandomInt(max : number) {
         return Math.floor(Math.random() * Math.floor(max));
@@ -90,6 +94,7 @@ const BubbleSort: React.FC = () => {
     }
 
     const onRun = () => {
+        setIsRunning(true);
         const svg = svgRef.current;
         const delay = 20 / (speedPercent/100);
         const duration = 20 / (speedPercent/100);
@@ -135,7 +140,10 @@ const BubbleSort: React.FC = () => {
                 }
                 
             }
-            if(!swaps) return;
+            if(!swaps) {
+                d3.timeout(() => setIsRunning(false), (delay * dataset.length) + ((totalDurationCycle * j)) + duration);
+                return;
+            }
         }
     }
 
@@ -169,10 +177,17 @@ const BubbleSort: React.FC = () => {
                     <Svg ref={svgRef}></Svg>
                 </Canvas>
                 <SidePanel>
-                    <NumberInput label="Number of elements: " ref={inputFieldRef} placeholder="Default (50)"/>
-                    <RefreshDataButton onClick={() => onRefresh()}>Refresh Data</RefreshDataButton>
-                    <SpeedSlider value={speedPercent} type="range" min={1} max={500} defaultValue={speedPercent} onChange={sliderOnChange}/>
-                    <RunButton onClick={() => onRun()}>Sort</RunButton>
+                    { 
+                        isRunning 
+                        ? <RunningAnimation></RunningAnimation>
+                        : 
+                            <>
+                                <NumberInput label="Number of elements: " ref={inputFieldRef} placeholder="Default (50)"/>
+                                <RefreshDataButton onClick={() => onRefresh()}>Refresh Data</RefreshDataButton>
+                                <SpeedSlider value={speedPercent} type="range" min={1} max={500} defaultValue={speedPercent} onChange={sliderOnChange}/>
+                                <RunButton onClick={() => onRun()}>Sort</RunButton>
+                            </>
+                    }
                 </SidePanel>
             </MainContent>
         </Container>

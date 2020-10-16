@@ -4,7 +4,8 @@ import styled from 'styled-components';
 const Container = styled.div`
     display:flex;
     flex-direction: column;
-    margin: 20px;
+    margin: 10px;
+    width:70%;
 `;
 
 const Label = styled.span`
