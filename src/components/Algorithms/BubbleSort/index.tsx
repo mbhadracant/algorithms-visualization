@@ -23,7 +23,7 @@ const BubbleSort: React.FC = () => {
     const data : number[] = [];
 
     const [dataLength, setDataLength] = useState(50);
-    const [speedPercent, setSpeedPercent] = useState(100);
+    const [speedPercent, setSpeedPercent] = useState(50);
     const [isRunning, setIsRunning] = useState(false);
 
     function getRandomInt(max : number) {
@@ -34,10 +34,9 @@ const BubbleSort: React.FC = () => {
         data.push(getRandomInt(100));
     }
 
-
     const scale = d3.scaleLinear()
         .domain([0, Math.max(...data)])
-        .range([0, SVG_HEIGHT]);
+        .range([10, SVG_HEIGHT]);
 
     const dataset = data.map(x => scale(x)!);
 
@@ -57,10 +56,9 @@ const BubbleSort: React.FC = () => {
     const onRun = () => {
         setIsRunning(true);
         const svg = svgRef.current;
-        const delay = 20 / (speedPercent/100);
         const duration = 20 / (speedPercent/100);
         const bars = select(svg).selectAll('rect').nodes().sort((a, b) => parseInt(select(a).attr('x')) - parseInt(select(b).attr('x')));
-        const totalDurationCycle = (duration + delay) * (bars.length/2);
+        let currDuration = 0;
       
         for(let j = 0; j < bars.length - 1; j++) {
             let swaps = false;
@@ -68,15 +66,17 @@ const BubbleSort: React.FC = () => {
                 
                 const first = select(bars[i]);
                 const second = select(bars[i+1]);
-                d3.timeout(() => first.attr('fill', barCompareColor), (delay * i) + (totalDurationCycle * j));
-                d3.timeout(() => second.attr('fill', barCompareColor), (delay * i) + (totalDurationCycle * j));
-    
+                d3.timeout(() => first.attr('fill', barCompareColor), currDuration);
+                d3.timeout(() => second.attr('fill', barCompareColor), currDuration);
+                
+                currDuration += duration;
+
                 if (parseFloat(first.attr('height')) > parseFloat(second.attr('height'))) {
                     first
                         .transition("swap1")
                         .duration(duration)
-                        .delay((delay * i) + (totalDurationCycle * j))
-                        .attr('x', ((i+1) * SVG_WIDTH / dataset.length) + 20)
+                        .delay(currDuration)
+                        .attr('x', ((i+1) * SVG_WIDTH / dataset.length))
                         .on('end', function () {
                             select(this).attr('fill', barDefaultColor);
                         });
@@ -84,8 +84,8 @@ const BubbleSort: React.FC = () => {
                     second
                         .transition("swap2")
                         .duration(duration)
-                        .delay((delay * i) + (totalDurationCycle * j))
-                        .attr('x', (i * SVG_WIDTH / dataset.length) + 20)
+                        .delay(currDuration)
+                        .attr('x', (i * SVG_WIDTH / dataset.length))
                         .on('end', function () {
                             select(this).attr('fill', barDefaultColor)
                         });
@@ -94,14 +94,15 @@ const BubbleSort: React.FC = () => {
                         const temp = bars[i];
                         bars[i] = bars[i+1];
                         bars[i+1] = temp;
+                        currDuration += duration;
                 } else {
-                    d3.timeout(() => first.attr('fill',barDefaultColor), ((delay * i) + (totalDurationCycle * j)) + duration);
-                    d3.timeout(() => second.attr('fill',barDefaultColor), ((delay * i) + (totalDurationCycle * j)) + duration);
+                    d3.timeout(() => first.attr('fill',barDefaultColor), currDuration);
+                    d3.timeout(() => second.attr('fill',barDefaultColor), currDuration);
                 }
-                
+
             }
             if(!swaps) {
-                d3.timeout(() => setIsRunning(false), (delay * dataset.length) + ((totalDurationCycle * j)) + duration);
+                d3.timeout(() => setIsRunning(false), currDuration);
                 return;
             }
         }

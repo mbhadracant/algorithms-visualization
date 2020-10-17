@@ -12,7 +12,7 @@ const ComponentMap = {
 
 const App : React.FC = () => {
 
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(Algorithms.SELECTION_SORT);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(Algorithms.BUBBLE_SORT);
   const AlgorithmComponent = ComponentMap[selectedAlgorithm];
   console.log(selectedAlgorithm)
 
