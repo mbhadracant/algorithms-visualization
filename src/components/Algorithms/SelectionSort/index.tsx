@@ -18,12 +18,12 @@ const Container = styled.div`
     margin: 30px;
 `;
 
-const BubbleSort: React.FC = () => {
+const SelectionSort: React.FC = () => {
 
     const data : number[] = [];
 
     const [dataLength, setDataLength] = useState(50);
-    const [speedPercent, setSpeedPercent] = useState(100);
+    const [speedPercent, setSpeedPercent] = useState(50);
     const [isRunning, setIsRunning] = useState(false);
 
     function getRandomInt(max : number) {
@@ -37,7 +37,7 @@ const BubbleSort: React.FC = () => {
 
     const scale = d3.scaleLinear()
         .domain([0, Math.max(...data)])
-        .range([0, SVG_HEIGHT]);
+        .range([10, SVG_HEIGHT]);
 
     const dataset = data.map(x => scale(x)!);
 
@@ -59,51 +59,61 @@ const BubbleSort: React.FC = () => {
         const svg = svgRef.current;
         const delay = 20 / (speedPercent/100);
         const duration = 20 / (speedPercent/100);
-        const bars = select(svg).selectAll('rect').nodes().sort((a, b) => parseInt(select(a).attr('x')) - parseInt(select(b).attr('x')));
-        const totalDurationCycle = (duration + delay) * (bars.length/2);
+        const bars = select(svg).selectAll('rect').nodes().sort((a, b) => parseInt(select(a).attr('x')) - parseInt(select(b).attr('x')));      
       
         for(let j = 0; j < bars.length - 1; j++) {
-            let swaps = false;
-            for (let i = 0; i < bars.length - 1 - j; i++) {
+            let totalDurationCycle = (((delay * bars.length - j) + duration) * j);
+            let min = Number.MAX_VALUE;
+            let minIndex = -1;
+            
+            d3.timeout(() => console.log('starting'), totalDurationCycle);
+            for (let i = j; i < bars.length; i++) {
+                const curr = select(bars[i]);
+                const minBar = select(bars[minIndex]);
                 
-                const first = select(bars[i]);
-                const second = select(bars[i+1]);
-                d3.timeout(() => first.attr('fill', barCompareColor), (delay * i) + (totalDurationCycle * j));
-                d3.timeout(() => second.attr('fill', barCompareColor), (delay * i) + (totalDurationCycle * j));
-    
-                if (parseFloat(first.attr('height')) > parseFloat(second.attr('height'))) {
-                    first
-                        .transition("swap1")
-                        .duration(duration)
-                        .delay((delay * i) + (totalDurationCycle * j))
-                        .attr('x', ((i+1) * SVG_WIDTH / dataset.length) + 20)
-                        .on('end', function () {
-                            select(this).attr('fill', barDefaultColor);
-                        });
-
-                    second
-                        .transition("swap2")
-                        .duration(duration)
-                        .delay((delay * i) + (totalDurationCycle * j))
-                        .attr('x', (i * SVG_WIDTH / dataset.length) + 20)
-                        .on('end', function () {
-                            select(this).attr('fill', barDefaultColor)
-                        });
-
-                        swaps = true;
-                        const temp = bars[i];
-                        bars[i] = bars[i+1];
-                        bars[i+1] = temp;
+                d3.timeout(() => curr.attr('fill', barCompareColor), (delay * i) + totalDurationCycle);
+                const height = parseFloat(curr.attr('height'));
+                
+                if (height < min) {
+                    minIndex = i;
+                    min = height;
+                    d3.timeout(() => curr.attr('fill', 'red'), (delay * i) + totalDurationCycle);
+                    d3.timeout(() => minBar.attr('fill', barDefaultColor), (delay * i) + totalDurationCycle);
                 } else {
-                    d3.timeout(() => first.attr('fill',barDefaultColor), ((delay * i) + (totalDurationCycle * j)) + duration);
-                    d3.timeout(() => second.attr('fill',barDefaultColor), ((delay * i) + (totalDurationCycle * j)) + duration);
+                    d3.timeout(() => curr.attr('fill', barDefaultColor), ((delay * i) + delay) + totalDurationCycle);
                 }
+            }
+            
+            d3.timeout(() => console.log('swapping now'), ((delay * bars.length - j)) + totalDurationCycle);
+            
+        
+            const first = select(bars[minIndex]);
+            const second = select(bars[j]);
+
+            first
+                .transition("swap2")
+                .duration(duration)
+                .delay((delay * bars.length - j) + delay + totalDurationCycle)
+                .attr('x', ((j) * SVG_WIDTH / dataset.length))
+                .on('end', function () {
+                    select(this).attr('fill', barDefaultColor);
+                });
+
+            second
+                .transition("swap1")
+                .duration(duration)
+                .delay((delay * bars.length - j) + delay + totalDurationCycle)
+                .attr('x', ((minIndex) * SVG_WIDTH / dataset.length))
+                .on('end', function () {
+                    select(this).attr('fill', barDefaultColor);
+                });
                 
-            }
-            if(!swaps) {
-                d3.timeout(() => setIsRunning(false), (delay * dataset.length) + ((totalDurationCycle * j)) + duration);
-                return;
-            }
+
+                const temp = bars[minIndex];
+                bars[minIndex] = bars[j];
+                bars[j] = temp;
+
+                d3.timeout(() => console.log('swapping done'), ((delay * bars.length - j) + delay + duration) + totalDurationCycle);
         }
     }
 
@@ -130,7 +140,7 @@ const BubbleSort: React.FC = () => {
 
     return (
         <Container>
-            <Title>Bubble Sort</Title>
+            <Title>Selection Sort</Title>
             <MainContent>
                 <Svg ref={svgRef}></Svg>
                 <SidePanel>
@@ -151,4 +161,4 @@ const BubbleSort: React.FC = () => {
     )
 };
 
-export default BubbleSort;
+export default SelectionSort;

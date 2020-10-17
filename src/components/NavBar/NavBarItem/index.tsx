@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { ChevronDown } from 'react-feather';
+import Algorithms from '../../../constants/Algorithms';
+
 interface NavBarItemProps {
     title: String,
-    subTitles: Array<String>
+    subTitles: Array<Algorithms>
+    setAlgo: Function
 }
 
 const Container = styled.div`
@@ -58,19 +61,16 @@ const ChildListItem = styled.li<ChildListItemProps>`
 `;
 
 const Chevron = styled(ChevronDown)`
-position:relative;
-top: 3px;
-margin-left: 5px;
+    position:relative;
+    top: 3px;
+    margin-left: 5px;
 `;
 
-
-
-const Test = styled.ul`
+const ChildUnorderedList = styled.ul`
     position: relative;
 `;
 
-
-const NavBarItem : React.FC<NavBarItemProps> = ({ title ,subTitles}) => {
+const NavBarItem : React.FC<NavBarItemProps> = ({ title ,subTitles, setAlgo}) => {
     
     const [isHovered, setHovered] = useState(false);
 
@@ -83,12 +83,19 @@ const NavBarItem : React.FC<NavBarItemProps> = ({ title ,subTitles}) => {
                 <ParentListItem>
                     {title}
                     <Chevron size={12}/>
-                    <Test>
+                    <ChildUnorderedList>
                         {
-                            subTitles.map((subtitle, index) => 
-                                <ChildListItem key={index} index={index} show={isHovered}>{subtitle}</ChildListItem>)
+                            subTitles.map((subtitle : Algorithms, index) => 
+                        <ChildListItem 
+                            key={index}
+                            index={index}
+                            show={isHovered}
+                            onClick={() => setAlgo(subtitle)}
+                        >
+                            {subtitle.toString()}
+                        </ChildListItem>)
                         }
-                    </Test>
+                    </ChildUnorderedList>
                 </ParentListItem>
             </UnorderedList>
         </Container>

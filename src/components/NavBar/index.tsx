@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import NavBarItem from './NavBarItem';
+import NavigationData from '../../constants/NavigationData';
 
 const Container = styled.div`
     background-color: rgba(0,0,0, 0.2);
@@ -18,11 +19,16 @@ const Title = styled.span`
     text-transform: uppercase;
 `;
 
-const NavBar : React.FC = () => (
+type NavBarProps = {
+    setAlgo: Function
+}
+
+const NavBar : React.FC<NavBarProps> = ({ setAlgo }) => (
   <Container>
       <Title>Algorithms Visualization</Title>
-      <NavBarItem title="Sorting" subTitles={['Bubble Sort', 'Selection Sort']}/>
-      <NavBarItem title="Recursive" subTitles={['Binary Search']}/>
+      {
+          NavigationData.map(data => <NavBarItem setAlgo={setAlgo} title={data.name} subTitles={data.children}/>)
+      }
   </Container>
 );
 

@@ -2,20 +2,23 @@ import React, { useState } from 'react';
 import NavBar from '../NavBar';
 import Algorithms from '../../constants/Algorithms';
 import BubbleSort from '../Algorithms/BubbleSort';
+import SelectionSort from '../Algorithms/SelectionSort';
 
 const ComponentMap = {
-  [Algorithms.BUBBLE_SORT]: <BubbleSort/>
+  [Algorithms.BUBBLE_SORT]: <BubbleSort />,
+  [Algorithms.SELECTION_SORT]: <SelectionSort />,
+  [Algorithms.BINARY_SEARCH]: <SelectionSort />,
 }
 
 const App : React.FC = () => {
 
-  const [selectedAlgorithm] = useState<Algorithms>(Algorithms.BUBBLE_SORT);
-
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(Algorithms.SELECTION_SORT);
   const AlgorithmComponent = ComponentMap[selectedAlgorithm];
+  console.log(selectedAlgorithm)
 
   return (
     <>
-      <NavBar/>
+      <NavBar setAlgo={setSelectedAlgorithm}/>
       {AlgorithmComponent}
     </>
   )
