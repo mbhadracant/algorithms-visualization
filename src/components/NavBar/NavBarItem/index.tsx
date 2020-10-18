@@ -4,7 +4,7 @@ import { ChevronDown } from 'react-feather';
 import Algorithms from '../../../constants/Algorithms';
 
 interface NavBarItemProps {
-    title: String,
+    title: string,
     subTitles: Array<Algorithms>
     setAlgo: Function
 }
@@ -33,7 +33,7 @@ const ParentListItem = styled.li`
 interface ChildListItemProps {
     show: boolean,
     index: number
-};
+}
 
 const ChildListItem = styled.li<ChildListItemProps>`
     position: absolute;

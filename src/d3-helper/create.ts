@@ -3,7 +3,8 @@ import { select } from 'd3-selection';
 import { barDefaultColor } from "../constants/Color";
 import * as d3 from 'd3';
 
-const createBars = (svg: SVGSVGElement | null, dataset : number[]) => {
+const createBars = (svg: SVGSVGElement | null, dataset: number[]) => {
+    console.log(Math.round(dataset[0]));
     const offset = ((SVG_WIDTH / dataset.length)) * 0.25;
         
         select(svg)

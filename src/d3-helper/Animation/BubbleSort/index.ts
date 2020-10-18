@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { barCompareColor, barDefaultColor } from '../../../constants/Color';
 import { SVG_WIDTH } from '../../../constants/Values';
 
-export default (svg: SVGSVGElement,  setIsRunning : Function, duration: number, dataset: number[]) => {
+export default (svg: SVGSVGElement,  setIsRunning : Function, duration: number, dataset: number[]) : void => {
     setIsRunning(true);
     const bars = select(svg).selectAll('rect').nodes().sort((a, b) => parseInt(select(a).attr('x')) - parseInt(select(b).attr('x')));
     let currDuration = 0;

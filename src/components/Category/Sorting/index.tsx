@@ -11,7 +11,8 @@ import Title from '../../Shared/Title';
 import MainContent from '../../Shared/MainContent';
 import SidePanel from '../../Shared/SidePanel';
 import { createBars, createScaledDatasetFromHeight } from '../../../d3-helper/create';
-import { DELAY } from '../../../constants/Values';
+import { DELAY, SVG_WIDTH, SVG_HEIGHT } from '../../../constants/Values';
+import { barDefaultColor } from '../../../constants/Color';
 
 const Container = styled.div`
     margin: 30px;
@@ -27,28 +28,30 @@ const Sorting: React.FC<SortingProps> = ({ title, onRun }) => {
     const [dataset, setDataSet] = useState(createScaledDatasetFromHeight(50));
     const [speedPercent, setSpeedPercent] = useState(100);
     const [isRunning, setIsRunning] = useState(false);
-    
     const duration = DELAY / (speedPercent/100);
 
     const svgRef = useRef<SVGSVGElement>(null);
     const inputFieldRef = useRef(null);
 
-
-    const onRefresh = () => {
+    function onRefresh() {
         const svg = svgRef.current;
-        select(svg).selectAll("*").remove();
         const textValue = select(inputFieldRef.current).property('value');
         const n = textValue === '' ? dataset.length : parseInt(textValue);
-        setDataSet(createScaledDatasetFromHeight(dataset.length));
-        createBars(svgRef.current, dataset);
+        setDataSet(createScaledDatasetFromHeight(n));        
     }
 
     useEffect(() => {
         setDataSet(createScaledDatasetFromHeight(dataset.length));
         const svg = svgRef.current;
         select(svg).selectAll("*").remove();
-        createBars(svgRef.current, dataset);
+        createBars(svg, dataset);
     },[title]);
+
+    useEffect(() => {
+        const svg = svgRef.current;
+        select(svg).selectAll("*").remove();
+        createBars(svg, dataset);
+    }, [dataset]);
 
     const sliderOnChange = function(event : React.ChangeEvent<HTMLInputElement>) {
         setSpeedPercent(parseInt(event.target.value));
@@ -67,7 +70,8 @@ const Sorting: React.FC<SortingProps> = ({ title, onRun }) => {
                         : 
                             <>
                                 <NumberInput label="Number of elements: " ref={inputFieldRef} placeholder="Default (50)"/>
-                                <RefreshDataButton onClick={() => onRefresh()}>Refresh Data</RefreshDataButton>
+                                <RefreshDataButton onClick={e => { onRefresh();}}>Refresh Data</RefreshDataButton>
+                                
                                 <SpeedSlider value={speedPercent} type="range" min={1} max={500} defaultValue={speedPercent} onChange={sliderOnChange}/>
                                 <RunButton onClick={() => onRun(svgRef.current, setIsRunning, duration, dataset)}>Sort</RunButton>
                             </>
