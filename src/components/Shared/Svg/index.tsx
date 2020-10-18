@@ -1,5 +1,5 @@
 import styled from "styled-components"
-;import { SVG_HEIGHT, SVG_WIDTH } from "../../../constants/Dimensions";
+;import { SVG_HEIGHT, SVG_WIDTH } from "../../../constants/Values";
 
 const Svg = styled.svg`
     height:${SVG_HEIGHT}px;

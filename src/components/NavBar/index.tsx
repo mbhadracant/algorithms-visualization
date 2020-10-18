@@ -27,7 +27,7 @@ const NavBar : React.FC<NavBarProps> = ({ setAlgo }) => (
   <Container>
       <Title>Algorithms Visualization</Title>
       {
-          NavigationData.map(data => <NavBarItem setAlgo={setAlgo} title={data.name} subTitles={data.children}/>)
+          NavigationData.map(data => <NavBarItem key={data.name} setAlgo={setAlgo} title={data.name} subTitles={data.children}/>)
       }
   </Container>
 );

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled from'styled-components';
 import { select } from 'd3-selection';
-import { easeCubicIn, easeBackOut, easeSinInOut } from 'd3';
+import { easeSinInOut } from 'd3';
 
 const height = 50;
 const width = 200;
@@ -21,8 +21,6 @@ const RunningAnimation: React.FC = () => {
 
     useEffect(() => {
         const svg = svgRef.current;
-
-        const offset = 5;
 
         select(svg)
             .append('text')
