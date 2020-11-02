@@ -11,8 +11,7 @@ import Title from '../../Shared/Title';
 import MainContent from '../../Shared/MainContent';
 import SidePanel from '../../Shared/SidePanel';
 import { createBars, createScaledDatasetFromHeight } from '../../../d3-helper/create';
-import { DELAY, SVG_WIDTH, SVG_HEIGHT } from '../../../constants/Values';
-import { barDefaultColor } from '../../../constants/Color';
+import { DELAY } from '../../../constants/Values';
 
 const Container = styled.div`
     margin: 30px;
@@ -26,7 +25,7 @@ type SortingProps = {
 const Sorting: React.FC<SortingProps> = ({ title, onRun }) => {
 
     const [dataset, setDataSet] = useState(createScaledDatasetFromHeight(50));
-    const [speedPercent, setSpeedPercent] = useState(100);
+    const [speedPercent, setSpeedPercent] = useState(50);
     const [isRunning, setIsRunning] = useState(false);
     const duration = DELAY / (speedPercent/100);
 
@@ -34,7 +33,6 @@ const Sorting: React.FC<SortingProps> = ({ title, onRun }) => {
     const inputFieldRef = useRef(null);
 
     function onRefresh() {
-        const svg = svgRef.current;
         const textValue = select(inputFieldRef.current).property('value');
         const n = textValue === '' ? dataset.length : parseInt(textValue);
         setDataSet(createScaledDatasetFromHeight(n));        

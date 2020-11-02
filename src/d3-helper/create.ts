@@ -4,7 +4,6 @@ import { barDefaultColor } from "../constants/Color";
 import * as d3 from 'd3';
 
 const createBars = (svg: SVGSVGElement | null, dataset: number[]) => {
-    console.log(Math.round(dataset[0]));
     const offset = ((SVG_WIDTH / dataset.length)) * 0.25;
         
         select(svg)
@@ -12,6 +11,7 @@ const createBars = (svg: SVGSVGElement | null, dataset: number[]) => {
             .data(dataset)
             .enter()
             .append('rect')
+            .attr('id', (d, i) => `bar-${i.toString()}`)
             .attr('width', (SVG_WIDTH / dataset.length) - offset)
             .attr('height', (d) => d)
             .attr('x', (d, i) => (i * ((SVG_WIDTH / dataset.length))))
@@ -37,5 +37,17 @@ const createScaledDatasetFromHeight = (n : number) => {
 
     return data.map(x => scale(x)!);
 }
+
+
+
+const testDataset = () => {
+    const data = [173, 337, 119, 500];
     
-export { createBars, createScaledDatasetFromHeight };
+    const scale = d3.scaleLinear()
+    .domain([0, Math.max(...data)])
+    .range([10, SVG_HEIGHT]);
+
+    return data.map(x => scale(x)!);
+}
+    
+export { createBars, createScaledDatasetFromHeight, testDataset };

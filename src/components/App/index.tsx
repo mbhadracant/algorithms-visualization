@@ -18,7 +18,7 @@ const ComponentMap = {
 
 const App : React.FC = () => {
 
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(Algorithms.INSERTION_SORT);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(Algorithms.MERGE_SORT);
   const AlgorithmComponent = ComponentMap[selectedAlgorithm];
 
   return (
