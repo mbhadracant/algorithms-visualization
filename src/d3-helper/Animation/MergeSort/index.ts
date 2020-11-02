@@ -1,13 +1,12 @@
 import { select, BaseType } from "d3-selection";
 import * as d3 from 'd3';
-import { barCompareColor, barDefaultColor } from "../../../constants/Color";
-import { SVG_WIDTH } from "../../../constants/Values";
+import { barCompareColor, barCompareSecondaryColor, barDefaultColor } from "../../../constants/Color";
+import { SVG_HEIGHT, SVG_WIDTH } from "../../../constants/Values";
 export default (svg: SVGSVGElement, setIsRunning: Function, duration: number, dataset: number[]) => {
   let currDuration = 0;
 
   setIsRunning(true);
   const bars = select(svg).selectAll('rect').nodes().sort((a, b) => parseFloat(select(a).attr('x')) - parseFloat(select(b).attr('x')));
-  const copy = bars.slice();
   
   function mergeSort (arr : BaseType[]) : BaseType[]{
     if(arr.length === 1){
@@ -21,12 +20,12 @@ export default (svg: SVGSVGElement, setIsRunning: Function, duration: number, da
   
     for (let i = 0; i < mid; i++) {
       const curr = select(arr[i]);
-      d3.timeout(() => curr.attr('fill', barCompareColor), currDuration);
+      d3.timeout(() => curr.attr('fill', barCompareSecondaryColor), currDuration);
     }
   
     for (let i = mid; i < arr.length; i++) {
       const curr = select(arr[i]);
-      d3.timeout(() => curr.attr('fill', barCompareColor), currDuration);
+      d3.timeout(() => curr.attr('fill', barCompareSecondaryColor), currDuration);
     }
   
     currDuration += (duration);
@@ -85,19 +84,27 @@ export default (svg: SVGSVGElement, setIsRunning: Function, duration: number, da
       const barPos = v.substring(4);
 
       bar
-          .transition()
+          .transition(v)
           .duration(duration)
           .delay(currDuration)
           .attr('x', ((parseInt(barPos)) * ((SVG_WIDTH / dataset.length))))
+          .attr('y', SVG_HEIGHT - parseFloat(bar.attr('height')) - 50)
           .on('end', function () {
-            select(this).attr('fill', barDefaultColor);
+            bar
+            .transition(`${v}-2`)
+            .duration(duration)
+            .attr('y', SVG_HEIGHT - parseFloat(bar.attr('height')))
+            .on('end', function () {
+              select(this).attr('fill', barDefaultColor);
+            });
           });
     });
-    currDuration += (duration);
+    
+    currDuration += (duration*2.5);
     return result;
   } 
 
   
-  const result = mergeSort(bars);
+  mergeSort(bars);
   d3.timeout(() => setIsRunning(false), currDuration);
 }

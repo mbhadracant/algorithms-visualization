@@ -33,7 +33,7 @@ const createScaledDatasetFromHeight = (n : number) => {
 
     const scale = d3.scaleLinear()
         .domain([0, Math.max(...data)])
-        .range([10, SVG_HEIGHT]);
+        .range([10, SVG_HEIGHT-100]);
 
     return data.map(x => scale(x)!);
 }
