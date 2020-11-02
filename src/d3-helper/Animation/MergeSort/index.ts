@@ -1,7 +1,7 @@
 import { select, BaseType } from "d3-selection";
 import * as d3 from 'd3';
 import { barCompareColor, barCompareSecondaryColor, barDefaultColor } from "../../../constants/Color";
-import { SVG_HEIGHT, SVG_WIDTH } from "../../../constants/Values";
+import { SVG_WIDTH } from "../../../constants/Values";
 export default (svg: SVGSVGElement, setIsRunning: Function, duration: number, dataset: number[]) => {
   let currDuration = 0;
 
@@ -84,27 +84,19 @@ export default (svg: SVGSVGElement, setIsRunning: Function, duration: number, da
       const barPos = v.substring(4);
 
       bar
-          .transition(v)
+          .transition()
           .duration(duration)
           .delay(currDuration)
           .attr('x', ((parseInt(barPos)) * ((SVG_WIDTH / dataset.length))))
-          .attr('y', SVG_HEIGHT - parseFloat(bar.attr('height')) - 50)
           .on('end', function () {
-            bar
-            .transition(`${v}-2`)
-            .duration(duration)
-            .attr('y', SVG_HEIGHT - parseFloat(bar.attr('height')))
-            .on('end', function () {
-              select(this).attr('fill', barDefaultColor);
-            });
+            select(this).attr('fill', barDefaultColor);
           });
     });
-    
-    currDuration += (duration*2.5);
+    currDuration += (duration);
     return result;
   } 
 
   
-  mergeSort(bars);
+  const result = mergeSort(bars);
   d3.timeout(() => setIsRunning(false), currDuration);
 }

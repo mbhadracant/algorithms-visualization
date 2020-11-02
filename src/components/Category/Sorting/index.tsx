@@ -24,8 +24,8 @@ type SortingProps = {
 
 const Sorting: React.FC<SortingProps> = ({ title, onRun }) => {
 
-    const [dataset, setDataSet] = useState(createScaledDatasetFromHeight(8));
-    const [speedPercent, setSpeedPercent] = useState(10);
+    const [dataset, setDataSet] = useState(createScaledDatasetFromHeight(50));
+    const [speedPercent, setSpeedPercent] = useState(50);
     const [isRunning, setIsRunning] = useState(false);
 
     var logScale = d3.scalePow()
