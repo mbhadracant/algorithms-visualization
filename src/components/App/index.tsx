@@ -6,6 +6,7 @@ import RunBubbleSort from './../../d3-helper/Animation/BubbleSort';
 import RunInsertionSort from './../../d3-helper/Animation/InsertionSort';
 import RunSelectionSort from './../../d3-helper/Animation/SelectionSort';
 import RunMergeSort from './../../d3-helper/Animation/MergeSort';
+import RunQuickSort  from './../../d3-helper/Animation/QuickSort';
 
 
 const ComponentMap = {
@@ -14,11 +15,13 @@ const ComponentMap = {
   [Algorithms.INSERTION_SORT]: <Sorting title={Algorithms.INSERTION_SORT} onRun={RunInsertionSort} />,
   [Algorithms.MERGE_SORT]: <Sorting title={Algorithms.MERGE_SORT} onRun={RunMergeSort} />,
   [Algorithms.BINARY_SEARCH]: <Sorting title={Algorithms.BUBBLE_SORT} onRun={RunBubbleSort} />,
+  [Algorithms.QUICK_SORT]: <Sorting title={Algorithms.QUICK_SORT} onRun={RunQuickSort} />,
+
 }
 
 const App : React.FC = () => {
 
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(Algorithms.MERGE_SORT);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(Algorithms.QUICK_SORT);
   const AlgorithmComponent = ComponentMap[selectedAlgorithm];
 
   return (

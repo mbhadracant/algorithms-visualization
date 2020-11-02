@@ -83,7 +83,7 @@ export default (svg: SVGSVGElement, setIsRunning: Function, duration: number, da
       
       bar.attr('id', v);
       const barPos = v.substring(4);
-      console.log(bar.attr('id') + ' - ' + bar.attr('height'));
+
       bar
           .transition()
           .duration(duration)

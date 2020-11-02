@@ -5,7 +5,8 @@ const NavigationData = [
         Algorithms.BUBBLE_SORT,
         Algorithms.SELECTION_SORT,
         Algorithms.INSERTION_SORT,
-        Algorithms.MERGE_SORT
+        Algorithms.MERGE_SORT,
+        Algorithms.QUICK_SORT
     ]},
     { name: 'Recursive', children: [Algorithms.BINARY_SEARCH]}
 ]

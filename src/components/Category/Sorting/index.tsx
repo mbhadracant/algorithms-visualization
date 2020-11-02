@@ -31,7 +31,7 @@ const Sorting: React.FC<SortingProps> = ({ title, onRun }) => {
     var logScale = d3.scalePow()
     .exponent(7)
     .domain([1, 100])
-    .range([0.5, 1000]);
+    .range([0.5, 2000]);
 
     const duration = logScale(101 - speedPercent);
 
