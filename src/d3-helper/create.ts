@@ -19,23 +19,40 @@ const createBars = (svg: SVGSVGElement | null, dataset: number[]) => {
             .attr('fill', barDefaultColor);
 }
 
+function shuffle(array : number[]) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+}
+  
 const createScaledDatasetFromHeight = (n : number) => {
 
     const data = [];
-
-    function getRandomInt(max : number) {
-        return Math.floor(Math.random() * Math.floor(max));
-    }
     
     for(let i = 0; i < n; i++) {
-        data.push(getRandomInt(100));
+        data.push(i);
     }
+
+    const randomData = shuffle(data);
 
     const scale = d3.scaleLinear()
         .domain([0, Math.max(...data)])
-        .range([10, SVG_HEIGHT-100]);
+        .range([10, SVG_HEIGHT]);
 
-    return data.map(x => scale(x)!);
+    return randomData.map(x => scale(x)!);
 }
 
 
